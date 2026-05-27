@@ -1,8 +1,9 @@
 services:
   vector:
-    image: altinity/clickhouse-server:25.8.9.20496.altinityantalya
+    image: altinity/clickhouse-server:25.8.22.20001.altinityantalya
     container_name: vector
     hostname: vector
+    restart: unless-stopped
     ports:
       - 8123:8123
       - 9000:9000
@@ -16,12 +17,13 @@ services:
       minio:
         condition: service_healthy
       ice-rest-catalog:
-        condition: service_healthy
+        condition: service_started
     volumes:
-      - clickhouse-data/vector/clickhouse:/var/lib/clickhouse
-      - clickhouse-logs/vector/log:/var/log/clickhouse-server
+      - ./clickhouse-data/vector/clickhouse:/var/lib/clickhouse
+      - ./clickhouse-logs/vector/log:/var/log/clickhouse-server
       - ./antalya/config.d/vector:/etc/clickhouse-server/config.d
       - ./antalya/users.d:/etc/clickhouse-server/users.d
+      - ./antalya/initdb.d:/docker-entrypoint-initdb.d
     networks:
       - data-network
     healthcheck:
@@ -31,25 +33,25 @@ services:
       retries: 5
 
   keeper:
-    image: altinity/clickhouse-keeper:25.8.9.20496.altinityantalya
+    image: altinity/clickhouse-keeper:25.8.22.20001.altinityantalya
     container_name: keeper
     hostname: keeper
     ports:
       - 9181:9181
     volumes:
-      - clickhouse-data/keeper/keeper:/var/lib/keeper
-      - clickhouse-logs/keeper/log:/var/log/clickhouse-keeper
+      - ./clickhouse-data/keeper/keeper:/var/lib/keeper
+      - ./clickhouse-logs/keeper/log:/var/log/clickhouse-keeper
       - ./antalya/config.d/keeper:/etc/clickhouse-keeper/keeper_config.d
     networks:
       - data-network
 
   swarm-1:
-    image: altinity/clickhouse-server:25.8.9.20496.altinityantalya
+    image: altinity/clickhouse-server:25.8.22.20001.altinityantalya
     container_name: swarm-1
     hostname: swarm-1
     volumes:
-      - clickhouse-data/swarm-1/clickhouse:/var/lib/clickhouse
-      - clickhouse-logs/swarm-1/log:/var/log/clickhouse-server
+      - ./clickhouse-data/swarm-1/clickhouse:/var/lib/clickhouse
+      - ./clickhouse-logs/swarm-1/log:/var/log/clickhouse-server
       - ./antalya/config.d/swarm-1:/etc/clickhouse-server/config.d
       - ./antalya/users.d:/etc/clickhouse-server/users.d
     environment:
@@ -60,12 +62,12 @@ services:
       - data-network
 
   swarm-2:
-    image: altinity/clickhouse-server:25.8.9.20496.altinityantalya
+    image: altinity/clickhouse-server:25.8.22.20001.altinityantalya
     container_name: swarm-2
     hostname: swarm-2
     volumes:
-      - clickhouse-data/swarm-2/clickhouse:/var/lib/clickhouse
-      - clickhouse-logs/swarm-2/log:/var/log/clickhouse-server
+      - ./clickhouse-data/swarm-2/clickhouse:/var/lib/clickhouse
+      - ./clickhouse-logs/swarm-2/log:/var/log/clickhouse-server
       - ./antalya/config.d/swarm-2:/etc/clickhouse-server/config.d
       - ./antalya/users.d:/etc/clickhouse-server/users.d
     environment:
@@ -78,7 +80,3 @@ services:
 networks:
   data-network:
     external: true
-
-volumes:
-  clickhouse-data:
-  clickhouse-logs:

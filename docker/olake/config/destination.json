@@ -2,7 +2,7 @@
   "type": "ICEBERG",
   "writer": {
     "catalog_type": "rest",
-    "rest_catalog_url": "http://ice-rest-catalog:5000",
+    "rest_catalog_url": "http://ice-rest-catalog:5000/",
     "token": "foo",
     "aws_access_key": "admin",
     "aws_secret_key": "password",

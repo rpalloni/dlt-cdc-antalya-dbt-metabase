@@ -14,3 +14,8 @@ target/
 dbt_packages/
 logs/
 .user.yml
+
+# runtime dir
+docker/clickhouse-data/
+docker/clickhouse-logs/
+docker/data/

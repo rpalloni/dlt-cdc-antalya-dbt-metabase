@@ -1,9 +1,10 @@
 services:
   ice-rest-catalog:
-    image: altinity/ice-rest-catalog:0.16.0
+    image: altinity/ice-rest-catalog:${ICE_REST_CATALOG_TAG:-latest}
+    container_name: ice-rest-catalog
     restart: unless-stopped
     ports:
-      - 5000:5000 # iceberg/http
+      - 5000:5000
     configs:
       - source: ice-rest-catalog-yaml
         target: /etc/ice/ice-rest-catalog.yaml
@@ -11,12 +12,17 @@ services:
       # for access to /var/lib/ice-rest-catalog/db.sqlite
       - ./data/ice-rest-catalog/var/lib/ice-rest-catalog:/var/lib/ice-rest-catalog
     depends_on:
-      - minio
+      minio:
+        condition: service_healthy
+    networks:
+      - data-network
+    healthcheck:
+      disable: true
 
 configs:
   ice-rest-catalog-yaml:
     content: |
-      uri: jdbc:sqlite:file:/var/lib/ice-rest-catalog/db.sqlite?journal_mode=WAL&synchronous=OFF&journal_size_limit=500
+      uri: jdbc:sqlite:file:/var/lib/ice-rest-catalog/db.sqlite?synchronous=OFF
       warehouse: s3://iceberg
       s3:
         endpoint: http://minio:9000
@@ -26,3 +32,9 @@ configs:
         region: eu-central-1
       bearerTokens:
         - value: foo
+      anonymousAccess:
+         enabled: true
+
+networks:
+  data-network:
+    external: true

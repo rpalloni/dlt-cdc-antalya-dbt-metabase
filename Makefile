@@ -10,12 +10,25 @@ COMPOSE = docker compose \
 network:
 	docker network inspect data-network >/dev/null 2>&1 || docker network create data-network
 
+# waits for ClickHouse to accept connections, then runs setup automatically
 up: network
-	$(COMPOSE) up --build
-	
-down: 
+	$(COMPOSE) up --build -d
+	@echo "Waiting for ClickHouse..."
+	@until docker exec vector clickhouse-client --user root --password topsecret --query "SELECT 1" >/dev/null 2>&1; do sleep 2; done
+	@$(MAKE) --no-print-directory setup
+
+down:
 	$(COMPOSE) down
 
-destroy: 
+setup:
+	docker exec vector clickhouse-client --user root --password topsecret \
+	--queries-file /docker-entrypoint-initdb.d/iceberg.sql
+
+destroy:
 	$(COMPOSE) down --remove-orphans -v
-	echo '{}' > docker/olake/config/state.json # clear Log Sequence Number (change position in the WAL)
+	echo '{}' > docker/olake/config/state.json
+	rm -f docker/data/ice-rest-catalog/var/lib/ice-rest-catalog/db.sqlite*
+	rm -rf docker/clickhouse-data/vector/clickhouse
+	rm -rf docker/clickhouse-data/swarm-1/clickhouse
+	rm -rf docker/clickhouse-data/swarm-2/clickhouse
+	rm -rf docker/clickhouse-data/keeper/keeper

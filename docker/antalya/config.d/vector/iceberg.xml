@@ -1,0 +1,14 @@
+<clickhouse>
+    <!-- Named collection for the Iceberg REST catalog backed by MinIO -->
+    <named_collections>
+        <iceberg_rest>
+            <url>http://ice-rest-catalog:5000/</url>
+            <catalog_type>rest</catalog_type>
+            <token>foo</token>
+            <warehouse>s3://iceberg</warehouse>
+            <storage_endpoint>http://minio:9000</storage_endpoint>
+            <aws_access_key_id>admin</aws_access_key_id>
+            <aws_secret_access_key>password</aws_secret_access_key>
+        </iceberg_rest>
+    </named_collections>
+</clickhouse>
