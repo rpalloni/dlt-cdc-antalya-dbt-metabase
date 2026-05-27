@@ -12,7 +12,7 @@ network:
 
 # waits for ClickHouse to accept connections, then runs setup automatically
 up: network
-	$(COMPOSE) up --build -d
+	$(COMPOSE) up --build
 	@echo "Waiting for ClickHouse..."
 	@until docker exec vector clickhouse-client --user root --password topsecret --query "SELECT 1" >/dev/null 2>&1; do sleep 2; done
 	@$(MAKE) --no-print-directory setup
