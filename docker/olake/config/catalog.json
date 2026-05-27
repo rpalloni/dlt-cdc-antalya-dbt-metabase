@@ -3,6 +3,7 @@
     "public": [
       {
         "normalization": true,
+        "append_mode": true,
         "partition_regex": "",
         "selected_columns": {
           "columns": ["id", "name", "vat_number", "country", "created_at", "updated_at", "_cdc_lsn", "_cdc_timestamp", "_olake_timestamp", "_op_type", "_olake_id"],
@@ -12,6 +13,7 @@
       },
       {
         "normalization": true,
+        "append_mode": true,
         "partition_regex": "",
         "selected_columns": {
           "columns": ["id", "company_id", "invoice_number", "amount", "currency", "status", "issued_at", "due_at", "created_at", "updated_at", "_cdc_lsn", "_cdc_timestamp", "_olake_timestamp", "_op_type", "_olake_id"],
