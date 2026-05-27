@@ -1,0 +1,19 @@
+[project]
+name = "dlt-cdc-antalya-dbt-metabase"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = [
+    "boto3>=1.43.0",
+    "dbt-clickhouse>=1.10.0",
+    "dlt[filesystem]>=1.27.0",
+    "dotenv>=0.9.9",
+    "pyiceberg[pyarrow,sql-postgres]>=0.11.1",
+]
+
+[tool.uv]
+# dbt-clickhouse pins mashumaro<3.18 but 3.21+ is required for python 3.14
+override-dependencies = [
+    "mashumaro[msgpack] >= 3.21"
+]
