@@ -2,8 +2,6 @@
 <clickhouse>
     <profiles>
         <default>
-            <!-- OLake parquet files have column stats that CH misreads as big uint64 causing LOGICAL_ERROR 49 in ReadFromObjectStorage. Disabled -->
-            <input_format_parquet_filter_push_down>0</input_format_parquet_filter_push_down>
         </default>
     </profiles>
 </clickhouse>
