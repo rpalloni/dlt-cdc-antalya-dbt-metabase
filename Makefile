@@ -5,6 +5,7 @@ COMPOSE = docker compose \
 	-f docker/docker-compose-catalog.yml \
 	-f docker/docker-compose-antalya.yml \
 	-f docker/docker-compose-olake.yml \
+	-f docker/docker-compose-metabase.yml \
 	--env-file docker/.env
 
 network:
